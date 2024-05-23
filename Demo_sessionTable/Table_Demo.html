@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table_demo</title>
+    <link rel="stylesheet" href="./Table_Demo.css">
+    <!-- ============link fonts================= -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kodchasan:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet" />
+    <!-- --------------------------------------------------- -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body>
+    <div id="alertInfo" class="hidden">
+        <p id="alertMessage" class="message-title"></p>
+    </div>
+    <section id="jsModal" class="hidden">
+        <form class="modal-product" onsubmit="submitForm(event)">
+            <div class="modal-content">
+                <h4 class="modal-head">
+                    Thêm sản phẩm
+                </h4>
+                <div class="modal-control">
+                    <label for="name" class="modal-label">
+                        Tên sản phẩm:
+                    </label>
+                    <input type="text" name="name" id="name" class="modal-input">
+                </div>
+                <div class="modal-control">
+                    <label for="price" class="modal-label">
+                        Giá:
+                    </label>
+                    <input type="number" name="price" id="price" class="modal-input" min="1">
+                </div>
+                <div class="modal-control">
+                    <label for="quantity" class="modal-label">
+                        Số lượng:
+                    </label>
+                    <input type="number" name="quantity" min="1" id="quantity" class="modal-input">
+                </div>
+                <div class="modal-control">
+                    <label for="category" class="modal-label">
+                        Danh mục:
+                    </label>
+                    <select name="category" class="modal-select">
+                        <option class="modal-option" value="AoNam">
+                            Áo Nam
+                        </option>
+                        <option class="modal-option" value="AoNu">
+                            Áo Nữ
+                        </option>
+                        <option class="modal-option" value="QuanNam">
+                            Quần Nam
+                        </option>
+                        <option class="modal-option" value="QuanNu">
+                            Quần Nữ
+                        </option>
+                    </select>
+                </div>
+                <div class="modal-control">
+                    <label for="description" class="modal-label">
+                        Mô tả:
+                    </label>
+                    <textarea class="modal-textarea" name="description" id="description" cols="10" rows="4"></textarea>
+                </div>
+                <div class="modal-control">
+                    <label for="modalImg" class="modal-label">
+                        Thêm ảnh:
+                    </label>
+                    <input type="file" id="modalImg" accept="image/*" onchange="convertToBase64()">
+                    <img id="imgProduct" class="modal-img" src="" alt="Hình ảnh">
+                </div>
+                <div class="modal-control modal-btn">
+                    <button class="btn btn-primary" type="button" onclick="closeForm()">
+                        Trở lại
+                    </button>
+                    <button class="btn btn-susses" type="submit">Thêm sản phẩm</button>
+                </div>
+            </div>
+        </form>
+    </section>
+    <main class="table-content">
+        <section id="action" class="table-action">
+            <header class="table-header">
+                <div class="table-add">
+                    <button class="btn btn-add" onclick="openForm()">
+                        Thêm Sản phẩm
+                    </button>
+                </div>
+                <div class="table-options">
+                    <span class="table-options-title">
+                        Lựa chọn danh mục:
+                    </span>
+                    <select name="category" class="table-select" onchange="changeCategory(event)">
+                        <option value="Tatca">Tất cả</option>
+                        <option value="AoNam">Áo Nam</option>
+                        <option value="AoNu">Áo Nữ</option>
+                        <option value="QuanNam">Quần Nam</option>
+                        <option value="QuanNu">Quần Nữ</option>
+                    </select>
+                </div>
+                <div class="table-search">
+                    <input type="text" class="input-search" onchange="changeNameSearch(event)">
+                    <button class="btn-search" onclick="render()">Tìm kiếm</button>
+                </div>
+            </header>
+        </section>
+        <section id="table" class="table-body">
+            <table class="table-inner">
+                <caption class="caption-table">Bảng thông tin sản phẩm</caption>
+                <thead>
+                    <tr>
+                        <th class="table-th table-id">ID</th>
+                        <th class="table-th">Ảnh SP</th>
+                        <th class="table-th">Tên SP</th>
+                        <th class="table-th">Giá SP</th>
+                        <th class="table-th">Số lượng</th>
+                        <th class="table-th">Mô tả</th>
+                        <th class="table-th">Danh mục</th>
+                        <th class="table-th">Trạng thái</th>
+                        <th class="table-th">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+
+                </tbody>
+            </table>
+        </section>
+        <section id="pagination" class="pro_pagination">
+            <div class="pagination-content">
+                <select class="pagination-select" onchange="changePageSize(event)">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                </select>
+            </div>
+            <ul class="pagination-list">
+
+                <li class="pagination-item">
+                    <button class="pagination-btn" onclick="changePage(-1)"><i class="fa-solid fa-caret-left"></i>
+                    </button>
+                </li>
+                <li class="pagination-item">
+                    <p id="page-list"></p>
+                </li>
+                <li class="pagination-item">
+                    <button class="pagination-btn" onclick="changePage(1)"><i class="fa-solid fa-caret-right"></i>
+                    </button>
+                </li>
+
+            </ul>
+        </section>
+    </main>
+
+</body>
+<script src="./TableDemo.js"></script>
+
+</html>
